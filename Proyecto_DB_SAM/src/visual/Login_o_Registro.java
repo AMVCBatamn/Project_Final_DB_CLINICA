@@ -185,3 +185,4 @@ public class Login_o_Registro extends JFrame {
 		contentPane.add(Fondo);
 	}
 }
+
