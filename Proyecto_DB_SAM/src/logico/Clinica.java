@@ -836,9 +836,11 @@ public class Clinica implements Serializable  {//u
         
     	// Ver metodos de carga:
     	
-    //	cargarDatosPersonaSQL();
+    	//cargarDatosPersonaSQL();
+    	cargarDatosViviendaSQL();
     	cargarDatosEnfermedadSQL();
     	cargarDatosDoctorSQL();
+    	cargarDatosPacienteSQL();
     } 
 	
 	// METODOS SQL (CARGA DE DATOS):
@@ -1000,7 +1002,9 @@ public class Clinica implements Serializable  {//u
                 
                 String codigo_paciente = rs.getString("id_paciente");
                 String tipoSangre = rs.getString("tipoSangre");
-                Boolean dirreccion = rs.getBoolean("dirreccion");
+                Boolean dirreccion = rs.getBoolean("direccion");
+                
+                String id_vivienda = rs.getString("id_vivienda");
                 
                 Date fec_nacim = null;
 
@@ -1012,9 +1016,18 @@ public class Clinica implements Serializable  {//u
                     System.out.println("Error parsing date: " + fec_nacimSQL);
                 }
                 
-                // Hacer metodo buscar vivienda by codigo
+                Vivienda vivienda = null;
                 
-              //  Paciente paciente = new Paciente(codigo, cedula, nombre, apellido, fec_nacim, sexo, user, password, obtenerRango(rango), tipoSangre); 
+                if (id_vivienda != null) {
+                    vivienda = Clinica.getInstance().buscarViviendaById(id_vivienda);
+                }
+
+                Paciente paciente = new Paciente(codigo, cedula, nombre, apellido, fec_nacim, sexo, user, password, obtenerRango(rango), vivienda, tipoSangre);
+                Clinica.getInstance().insertarPersona(paciente);
+
+                if (vivienda != null) {
+                    vivienda.insertarPersona(paciente);
+                }
             }
             
         } catch (SQLException e) {
@@ -1062,13 +1075,31 @@ public class Clinica implements Serializable  {//u
     }
     
     //VIVIENDAS:
-    
-    
+
     public void cargarDatosViviendaSQL() {
     	
-    	
-    	
+        String query = "SELECT * " +
+        			   "FROM VIVIENDA AS v " +
+        			   "LEFT JOIN PACIENTE AS p ON v.id_vivienda = p.id_vivienda ";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+        	
+            while (rs.next()) {
+                String codigo_vivienda = rs.getString("id_vivienda");
+                String direccion = rs.getString("direccion");
+                
+                Vivienda vivienda = new Vivienda(codigo_vivienda, direccion);
+               Clinica.getInstance().insertarVivienda(vivienda);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+    
+    
     
 }
 

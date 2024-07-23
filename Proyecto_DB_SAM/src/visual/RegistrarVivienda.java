@@ -184,13 +184,12 @@ public class RegistrarVivienda extends JDialog {
 				           btnBuscar.setEnabled(true);
 				           txtAfiliado.setEnabled(true);
 				           selected = Clinica.getInstance().buscarViviendaById(table.getValueAt(index, 0).toString());
-				           System.out.println("Persona: " + selected.getCodigo() + "Personas en la lista: "+ selected.getMisPersonas().size());
+				           System.out.println("Persona: " + selected.getCodigo() + " Personas en la lista: "+ selected.getMisPersonas().size());
 				        } else {
 				        	JOptionPane.showMessageDialog(null, "Selecci�n Inv�lida", "Error", JOptionPane.ERROR_MESSAGE);
 				        }
 				    }
 				});
-				scrollPane.setViewportView(table);
 			}
 			{
 				panelFamiliares = new JPanel();
