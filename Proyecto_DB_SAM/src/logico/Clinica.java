@@ -836,8 +836,9 @@ public class Clinica implements Serializable  {//u
         
     	// Ver metodos de carga:
     	
-    	cargarDatosPersonaSQL();
+    //	cargarDatosPersonaSQL();
     	cargarDatosEnfermedadSQL();
+    	cargarDatosDoctorSQL();
     } 
 	
 	// METODOS SQL (CARGA DE DATOS):
@@ -922,12 +923,12 @@ public class Clinica implements Serializable  {//u
     
     public void cargarDatosDoctorSQL() {
     	
-    	String query = "SELECT *" + 
-	    			   "FROM PERSONA AS p" + 
-	    			   "INNER JOIN DOCTOR AS d ON p.id_persona = d.id_persona" + 
-	    			   "INNER JOIN CREDENCIAL AS c ON d.id_persona = c.id_persona" + 
-	    			   "INNER JOIN RANGO_PERSONA AS ra ON c.id_rango_persona = ra.id_rango_persona" + 
-	    			   "WHERE ra.rango = 'Doctor'";
+    	String query = "SELECT * " + 
+	    			   "FROM PERSONA AS p " + 
+	    			   "INNER JOIN DOCTOR AS d ON p.id_persona = d.id_persona " + 
+	    			   "INNER JOIN CREDENCIAL AS c ON d.id_persona = c.id_persona " + 
+	    			   "INNER JOIN RANGO_PERSONA AS ra ON c.id_rango_persona = ra.id_rango_persona " + 
+	    			   "WHERE ra.rango = 'Doctor' ";
     	
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -960,11 +961,10 @@ public class Clinica implements Serializable  {//u
                     System.out.println("Error parsing date: " + fec_nacimSQL);
                 }
                 
-              //  Doctor doctor = new 
-                
-                
-                
+                Doctor doctor = new Doctor(codigo, cedula, nombre, apellido, fec_nacim, sexo, user, password, obtenerRango(rango), especialidad, enServicio);
+                Clinica.getInstance().insertarPersona(doctor);    
             }
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -973,7 +973,56 @@ public class Clinica implements Serializable  {//u
     
     public void cargarDatosPacienteSQL() {
     	
+    	String query = "SELECT * " + 
+	    			   "FROM PERSONA AS p " + 
+	    			   "INNER JOIN PACIENTE AS pc ON p.id_persona = pc.id_persona " + 
+	    			   "INNER JOIN CREDENCIAL AS c ON pc.id_persona = c.id_persona " + 
+	    			   "INNER JOIN RANGO_PERSONA AS ra ON c.id_rango_persona = ra.id_rango_persona " + 
+	    			   "INNER JOIN VIVIENDA AS v ON pc.id_vivienda = v.id_vivienda " +
+	    			   "WHERE ra.rango = 'Paciente' ";
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String codigo = rs.getString("id_persona");
+                String cedula = rs.getString("cedula");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String sexo = rs.getString("sexo");
+                String fec_nacimSQL = rs.getString("fecha_nacimiento");
+                String user = rs.getString("userName");
+                String password = rs.getString("passwordUser");
+                String rango = rs.getString("rango");
+                
+                String codigo_paciente = rs.getString("id_paciente");
+                String tipoSangre = rs.getString("tipoSangre");
+                Boolean dirreccion = rs.getBoolean("dirreccion");
+                
+                Date fec_nacim = null;
+
+                try {
+                    if (fec_nacimSQL != null && !fec_nacimSQL.isEmpty()) {
+                        fec_nacim = sdf.parse(fec_nacimSQL);
+                    }
+                } catch (ParseException e) {
+                    System.out.println("Error parsing date: " + fec_nacimSQL);
+                }
+                
+                // Hacer metodo buscar vivienda by codigo
+                
+              //  Paciente paciente = new Paciente(codigo, cedula, nombre, apellido, fec_nacim, sexo, user, password, obtenerRango(rango), tipoSangre); 
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	
     }
+    
     
     public void cargarDatosPersona() {
     	
@@ -1012,6 +1061,14 @@ public class Clinica implements Serializable  {//u
         }
     }
     
+    //VIVIENDAS:
+    
+    
+    public void cargarDatosViviendaSQL() {
+    	
+    	
+    	
+    }
     
 }
 
