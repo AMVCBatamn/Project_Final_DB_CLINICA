@@ -6,12 +6,21 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
+
+import sql.DatabaseConnection;
 
 public class Clinica implements Serializable  {//u
 	
@@ -822,5 +831,91 @@ public class Clinica implements Serializable  {//u
 			
 		return cita;
 	}
+	
+	
+    public void cargarDatosDesdeSQL() throws ParseException {
+        
+    	// Ver metodos de carga:
+    	
+    	cargarDatosPersonaSQL();
+    }
+	
+	// METODOS SQL (CARGA DE DATOS):
+    
+    //PERSONAS:
 
+    public void cargarDatosPersonaSQL() throws ParseException {
+        String query = "SELECT p.id_persona, p.cedula, p.nombre, p.apellido, p.sexo, p.fecha_nacimiento, " +
+                       "c.userName, c.passwordUser, r.rango " +
+                       "FROM PERSONA p " +
+                       "JOIN CREDENCIAL c ON p.id_persona = c.id_persona " +
+                       "JOIN RANGO_PERSONA r ON c.id_persona = r.id_rango_persona";
+
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String codigo = rs.getString("id_persona");
+                String cedula = rs.getString("cedula");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String sexo = rs.getString("sexo");
+                String fec_nacimSQL = rs.getString("fecha_nacimiento");
+                String user = rs.getString("userName");
+                String password = rs.getString("passwordUser");
+                String rango = rs.getString("rango");
+
+                Date fec_nacim = null;
+
+                try {
+                    if (fec_nacimSQL != null && !fec_nacimSQL.isEmpty()) {
+                        fec_nacim = sdf.parse(fec_nacimSQL);
+                    }
+                } catch (ParseException e) {
+                    System.out.println("Error parsing date: " + fec_nacimSQL);
+                }
+
+                // Imprimir los datos
+                System.out.println("Codigo: " + codigo);
+                System.out.println("Cedula: " + cedula);
+                System.out.println("Nombre: " + nombre);
+                System.out.println("Apellido: " + apellido);
+                System.out.println("Sexo: " + sexo);
+                System.out.println("Fecha de Nacimiento: " + (fec_nacim != null ? sdf.format(fec_nacim) : "Fecha inválida o no disponible"));
+                System.out.println("User: " + user);
+                System.out.println("Password: " + password);
+                System.out.println("Rango: " + rango);
+                System.out.println();
+
+                Persona persona = new Persona(codigo, cedula, nombre, apellido, fec_nacim, sexo, user, password, obtenerRango(rango));
+                clinica.getInstance().insertarPersona(persona);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private int obtenerRango(String rango) {
+	    // EN EL PROGRMA DE JAVA: 4 ADMIN, 3 SECRETARIO, 2 DOCTOR, 1 PACIENTE, 0 PERSONA
+        switch (rango) {
+            case "Administrador":
+                return 4;
+            case "Secretario":
+                return 3;
+            case "Doctor":
+                return 2;
+            case "Paciente":
+                return 1;
+            default: // Persona
+                return 5;
+        }
+    }
+	
+	
 }
+
+
+

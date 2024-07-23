@@ -39,6 +39,7 @@ public class Login_o_Registro extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+/*
 	public static void main(String[] args) {
 	    EventQueue.invokeLater(new Runnable() {
 	        public void run() {
@@ -86,7 +87,26 @@ public class Login_o_Registro extends JFrame {
 	        }
 	    });
 	}
-
+*/
+	
+	public static void main(String[] args) {
+	    EventQueue.invokeLater(new Runnable() {
+	        public void run() {
+	            try {
+	                // Inicializa la instancia de Clinica y carga los datos
+	                Clinica.getInstance().cargarDatosDesdeSQL();
+	                
+	                // Crea y muestra la ventana de login
+	                Login_o_Registro frame = new Login_o_Registro();
+	                frame.setVisible(true);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                JOptionPane.showMessageDialog(null, "Error al iniciar la aplicación: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
+	    });
+	}
+	
 
 	/** 
 	 * Create the frame.
