@@ -126,7 +126,7 @@ public class Clinica implements Serializable  {//u
     public void insertarEnfermedad(Enfermedad enfermedad) {
         misEnfermedades.add(enfermedad);
         codEnfermedad++;
-        guardarDatos();
+       // guardarDatos();
     }
 
     public void insertarCita(Cita cita) {
@@ -137,7 +137,7 @@ public class Clinica implements Serializable  {//u
 
     public void insertarVacuna(Vacuna vacuna) {
         misVacunas.add(vacuna);
-        codVacuna++; // Incrementa el código de la vacuna
+        codVacuna++;
         guardarDatos();
     }
 
@@ -838,7 +838,7 @@ public class Clinica implements Serializable  {//u
     	
     	cargarDatosPersonaSQL();
     	cargarDatosEnfermedadSQL();
-    }
+    } 
 	
 	// METODOS SQL (CARGA DE DATOS):
     
@@ -893,11 +893,15 @@ public class Clinica implements Serializable  {//u
 
                 Persona persona = new Persona(codigo, cedula, nombre, apellido, fec_nacim, sexo, user, password, obtenerRango(rango));
                 clinica.getInstance().insertarPersona(persona);
+                
+                
+                
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
     private int obtenerRango(String rango) {
 	    // EN EL PROGRMA DE JAVA: 4 ADMIN, 3 SECRETARIO, 2 DOCTOR, 1 PACIENTE, 0 PERSONA
         switch (rango) {
@@ -913,15 +917,74 @@ public class Clinica implements Serializable  {//u
                 return 5;
         }
     }
-    // aqui
     
+    //DOCTORES:
+    
+    public void cargarDatosDoctorSQL() {
+    	
+    	String query = "SELECT *" + 
+	    			   "FROM PERSONA AS p" + 
+	    			   "INNER JOIN DOCTOR AS d ON p.id_persona = d.id_persona" + 
+	    			   "INNER JOIN CREDENCIAL AS c ON d.id_persona = c.id_persona" + 
+	    			   "INNER JOIN RANGO_PERSONA AS ra ON c.id_rango_persona = ra.id_rango_persona" + 
+	    			   "WHERE ra.rango = 'Doctor'";
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	// METODOS SQL (CARGA DE DATOS):
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String codigo = rs.getString("id_persona");
+                String cedula = rs.getString("cedula");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String sexo = rs.getString("sexo");
+                String fec_nacimSQL = rs.getString("fecha_nacimiento");
+                String user = rs.getString("userName");
+                String password = rs.getString("passwordUser");
+                String rango = rs.getString("rango");
+                
+                String codigo_doctor = rs.getString("id_doctor");
+                String especialidad = rs.getString("especialidad");
+                Boolean enServicio = rs.getBoolean("enServicio");
+                
+                Date fec_nacim = null;
+
+                try {
+                    if (fec_nacimSQL != null && !fec_nacimSQL.isEmpty()) {
+                        fec_nacim = sdf.parse(fec_nacimSQL);
+                    }
+                } catch (ParseException e) {
+                    System.out.println("Error parsing date: " + fec_nacimSQL);
+                }
+                
+              //  Doctor doctor = new 
+                
+                
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    	
+    }
     
-    //PERSONAS:
+    public void cargarDatosPacienteSQL() {
+    	
+    }
+    
+    public void cargarDatosPersona() {
+    	
+    	
+    }
+
+    //ENFERMEDADES:
+    
     public void cargarDatosEnfermedadSQL() {
-        String query = "SELECT id_enfermedad, nombre, sintomas, tratamiento, id_gravedad_enfermedad " +
-                       "FROM ENFERMEDAD";
+        String query = "SELECT e.id_enfermedad, e.nombre, e.sintomas, e.tratamiento, e.id_gravedad_enfermedad " + 
+        			   "FROM ENFERMEDAD e";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -932,19 +995,17 @@ public class Clinica implements Serializable  {//u
                 String nombre = rs.getString("nombre");
                 String sintomas = rs.getString("sintomas");
                 String tratamiento = rs.getString("tratamiento");
-                int gravedad = rs.getInt("id_gravedad_enfermedad");
+                String gravedad = rs.getString("id_gravedad_enfermedad");
 
-                // Crear el objeto Enfermedad y agregarlo a la lista
-                Enfermedad enfermedad = new Enfermedad(codigo, nombre, sintomas, tratamiento, gravedad);
-                Clinica.getInstance().insertarEnfermedad(enfermedad);
-
-                // Opcional: Imprimir los datos para verificar
-                System.out.println("Código: " + codigo);
+                System.out.println("Codigo: " + codigo);
                 System.out.println("Nombre: " + nombre);
-                System.out.println("Síntomas: " + sintomas);
+                System.out.println("Sintomas: " + sintomas);
                 System.out.println("Tratamiento: " + tratamiento);
                 System.out.println("Gravedad: " + gravedad);
                 System.out.println();
+                
+                Enfermedad enfermedad = new Enfermedad(codigo, nombre, sintomas, tratamiento, Integer.parseInt(gravedad));
+                Clinica.getInstance().insertarEnfermedad(enfermedad);
             }
         } catch (SQLException e) {
             e.printStackTrace();
