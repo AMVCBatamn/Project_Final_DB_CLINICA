@@ -507,7 +507,7 @@ public class Clinica implements Serializable  {//u
 	public String obtenerViviendasMasPobladas() {
 		
 		if (misViviendas.isEmpty()) {
-	        return "Información no disponible!\n";
+	        return "Informaciï¿½n no disponible!\n";
 	    }
 		ArrayList<Vivienda> viviendasOrdenadas = new ArrayList<>(misViviendas);
 		
@@ -515,7 +515,7 @@ public class Clinica implements Serializable  {//u
         Collections.reverse(viviendasOrdenadas);
         
         int limite = Math.min(3, viviendasOrdenadas.size());
-        StringBuilder resultado = new StringBuilder("Las viviendas más pobladas son:\n");
+        StringBuilder resultado = new StringBuilder("Las viviendas mï¿½s pobladas son:\n");
 
         for (int i = 0; i < limite; i++) {
             Vivienda vivienda = viviendasOrdenadas.get(i);
@@ -526,7 +526,7 @@ public class Clinica implements Serializable  {//u
 	
     public String calcularPromedioEdadPersonas() {
         if (misPersonas.isEmpty()) {
-        	return "Información no disponible!\n";
+        	return "Informaciï¿½n no disponible!\n";
         }
 
         Calendar calHoy = Calendar.getInstance();
@@ -548,12 +548,12 @@ public class Clinica implements Serializable  {//u
             }
         }
         double promedioEdad = (double) sumEdades / misPersonas.size();
-        return String.format("El promedio de edad de las personas tratadas: %.2f años.\n", promedioEdad);
+        return String.format("El promedio de edad de las personas tratadas: %.2f aï¿½os.\n", promedioEdad);
     }
 	
     public String calcularPromedioSexoPersoanas() {
         if (misPersonas.isEmpty()) {
-        	return "Información no disponible!\n";
+        	return "Informaciï¿½n no disponible!\n";
         }
 
         int countMasculino = 0;
@@ -579,7 +579,7 @@ public class Clinica implements Serializable  {//u
     
     public String obtenerTotalPersonasAtendidas() {
         if (misPersonas.isEmpty()) {
-        	return "Información no disponible!\n";
+        	return "Informaciï¿½n no disponible!\n";
         }
         int total = 0;
         for (Persona persona : misPersonas) {
@@ -592,7 +592,7 @@ public class Clinica implements Serializable  {//u
     
     public String obtenerEnfermedadesMasRecurrentes() {
         if (misEnfermedades.isEmpty()) {
-        	return "Información no disponible!\n";
+        	return "Informaciï¿½n no disponible!\n";
         }
 
         String[] nombresEnfermedades = new String[misEnfermedades.size()];
@@ -615,7 +615,7 @@ public class Clinica implements Serializable  {//u
         ordenarPorFrecuenciaDescendente(nombresEnfermedades, frecuenciasEnfermedades);
         
         int limite = Math.min(3, misEnfermedades.size());
-        StringBuilder resultado = new StringBuilder("Las enfermedades más recurrentes son:\n");
+        StringBuilder resultado = new StringBuilder("Las enfermedades mï¿½s recurrentes son:\n");
 
         for (int i = 0; i < limite; i++) {
             resultado.append(String.format("%d. %s: %d veces\n", i + 1, nombresEnfermedades[i], frecuenciasEnfermedades[i]));
@@ -652,7 +652,7 @@ public class Clinica implements Serializable  {//u
     
     public String obtenerEnfermedadesMasGraves() {
         if (misEnfermedades.isEmpty()) {
-            return "Información no disponible!\n";
+            return "Informaciï¿½n no disponible!\n";
         }
 
         ArrayList<Enfermedad> enfermedadesGraves = new ArrayList<>();
@@ -679,7 +679,7 @@ public class Clinica implements Serializable  {//u
     
     public String obtenerDoctorConMasCitas() {
         if (misCitas.isEmpty()) {
-            return "Información no disponible!\n";
+            return "Informaciï¿½n no disponible!\n";
         }
 
         Doctor doctorConMasCitas = null;
@@ -695,7 +695,7 @@ public class Clinica implements Serializable  {//u
         }
 
         if (doctorConMasCitas != null) {
-        	return String.format("El doctor con más citas es: %s, con especialidad de %s, y tiene %d citas.\n", doctorConMasCitas.getNombre(), doctorConMasCitas.getEspecialidad(), maxCitas);
+        	return String.format("El doctor con mï¿½s citas es: %s, con especialidad de %s, y tiene %d citas.\n", doctorConMasCitas.getNombre(), doctorConMasCitas.getEspecialidad(), maxCitas);
         } else {
             return "No hay doctores con citas registradas.\n";
         }
@@ -728,7 +728,7 @@ public class Clinica implements Serializable  {//u
 
     public String obtenerTotalCitasRealizadas() {
         if (misCitas.isEmpty()) {
-        	return "Información no disponible!\n";
+        	return "Informaciï¿½n no disponible!\n";
         }
         int totalCitasRealizadas = 0;
         for (Cita cita : misCitas) {
@@ -741,7 +741,7 @@ public class Clinica implements Serializable  {//u
 
     public String calcularPromedioSexoDoctores() {
         if (misPersonas.isEmpty()) {
-        	return "Información no disponible!\n";
+        	return "Informaciï¿½n no disponible!\n";
         }
 
         int countMasculino = 0;
@@ -766,12 +766,12 @@ public class Clinica implements Serializable  {//u
         double porcentajeMasculino = (double) countMasculino / cantDoctores * 100;
         double porcentajeFemenino = (double) countFemenino / cantDoctores * 100;
 
-        return String.format("Promedio de Género entre los doctores:\nMasculino: %.2f%%\nFemenino: %.2f%%\n", porcentajeMasculino, porcentajeFemenino);
+        return String.format("Promedio de Gï¿½nero entre los doctores:\nMasculino: %.2f%%\nFemenino: %.2f%%\n", porcentajeMasculino, porcentajeFemenino);
     }
     
     public String obtenerVacunaMasCurativa() {
         if (misVacunas.isEmpty()) {
-        	return "Información no disponible!\n";
+        	return "Informaciï¿½n no disponible!\n";
         }
 
         Vacuna vacunaConMasEnfermedades = null;
@@ -789,8 +789,8 @@ public class Clinica implements Serializable  {//u
             return "No hay vacunas con enfermedades asociadas.\n";
         }
 
-        StringBuilder resultado = new StringBuilder("La vacuna que más cura enfermedades es:\n");
-        resultado.append(String.format("- %s (Código: %s)\n", vacunaConMasEnfermedades.getNombre(), vacunaConMasEnfermedades.getCodigo()));
+        StringBuilder resultado = new StringBuilder("La vacuna que mï¿½s cura enfermedades es:\n");
+        resultado.append(String.format("- %s (Cï¿½digo: %s)\n", vacunaConMasEnfermedades.getNombre(), vacunaConMasEnfermedades.getCodigo()));
         resultado.append("Enfermedades asociadas:\n");
 
         for (Enfermedad enfermedad : vacunaConMasEnfermedades.getMisEnfermedades()) {
@@ -832,12 +832,12 @@ public class Clinica implements Serializable  {//u
 		return cita;
 	}
 	
-	
     public void cargarDatosDesdeSQL() throws ParseException {
         
     	// Ver metodos de carga:
     	
     	cargarDatosPersonaSQL();
+    	cargarDatosEnfermedadSQL();
     }
 	
 	// METODOS SQL (CARGA DE DATOS):
@@ -885,7 +885,7 @@ public class Clinica implements Serializable  {//u
                 System.out.println("Nombre: " + nombre);
                 System.out.println("Apellido: " + apellido);
                 System.out.println("Sexo: " + sexo);
-                System.out.println("Fecha de Nacimiento: " + (fec_nacim != null ? sdf.format(fec_nacim) : "Fecha inválida o no disponible"));
+                System.out.println("Fecha de Nacimiento: " + (fec_nacim != null ? sdf.format(fec_nacim) : "Fecha invï¿½lida o no disponible"));
                 System.out.println("User: " + user);
                 System.out.println("Password: " + password);
                 System.out.println("Rango: " + rango);
@@ -913,11 +913,50 @@ public class Clinica implements Serializable  {//u
                 return 5;
         }
     }
+    // aqui
+    
+
+	// METODOS SQL (CARGA DE DATOS):
+    
+    //PERSONAS:
+    public void cargarDatosEnfermedadSQL() {
+        String query = "SELECT id_enfermedad, nombre, sintomas, tratamiento, id_gravedad_enfermedad " +
+                       "FROM ENFERMEDAD";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String codigo = rs.getString("id_enfermedad");
+                String nombre = rs.getString("nombre");
+                String sintomas = rs.getString("sintomas");
+                String tratamiento = rs.getString("tratamiento");
+                int gravedad = rs.getInt("id_gravedad_enfermedad");
+
+                // Crear el objeto Enfermedad y agregarlo a la lista
+                Enfermedad enfermedad = new Enfermedad(codigo, nombre, sintomas, tratamiento, gravedad);
+                Clinica.getInstance().insertarEnfermedad(enfermedad);
+
+                // Opcional: Imprimir los datos para verificar
+                System.out.println("CÃ³digo: " + codigo);
+                System.out.println("Nombre: " + nombre);
+                System.out.println("SÃ­ntomas: " + sintomas);
+                System.out.println("Tratamiento: " + tratamiento);
+                System.out.println("Gravedad: " + gravedad);
+                System.out.println();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
     
-	
-	
 }
+
+	
+	
+
 
 
 
